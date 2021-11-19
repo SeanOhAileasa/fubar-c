@@ -4,8 +4,8 @@ int main(int argc, char *argv[])
 {
     char s[MAX];
     printf("enter full name (include middle name): ");
-    fgets(s,MAX,stdin); // input "jane m smith"
+    scanf("%10s",s); // input "jane smith"
     printf("hello, ");
-    puts(s); // output "jane m smi" '\0'
+    puts(s); // output "jane" '\0'
     return 0;
 }
