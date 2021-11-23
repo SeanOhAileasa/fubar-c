@@ -15,7 +15,7 @@ int main(int argc, char *argv[])
     
     // printf(text); // display via string
     
-    for(int counter=0;counter<strlen(text);++counter) // display via character
+    for (int counter=0;counter<strlen(text);++counter) // display via character
         // printf("%c",text[counter]); // using array notation
         printf("%c",*(text+counter)); // using pointer notation
     
@@ -42,6 +42,6 @@ void display_chars(int num,char ch)
 void stars_only() // void type optional
 {
     int n=81;
-    for(int counter=0;counter<n;++counter)
+    for (int counter=0;counter<n;++counter)
         putchar('*');
 }
