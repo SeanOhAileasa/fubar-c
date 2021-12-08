@@ -27,7 +27,7 @@ void fe()
 }
 /* prototype of an array of function pointers
  * initialise address of the five functions using ``'\0'`` (or ``NULL``) to terminate */
-void (*funcs[])()={&fa,&fb,&fc,&fd,&fe,'\0'}; // operator ``&`` optional
+void (*funcs[])()={&fa,&fb,&fc,&fd,&fe,NULL}; // operator ``&`` optional
 int main(int argc, char *argv[])
 {
     /* i.  function ``prompt`` returns a constant character pointer
@@ -66,7 +66,7 @@ int jump(const char *rs)
     /* every other ``rs`` that is not ``'q'`` or ``'Q'`` then count the length of the array ``funcs``
      * looking for the ``'\0'`` at the end of the list of function pointers (``funcs``) */
     int l=0;
-    while (funcs[l]!='\0') // not at end
+    while (funcs[l]!=NULL) // not at end
         l++;
     /* trick to convert ASCII digit or numeral into an ``int`` */
     int i=(int)code-'0';
