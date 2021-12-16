@@ -52,7 +52,7 @@ struct Customer {
 void printProduct(struct Product p) // original source code
 {
     if (p.price!=0) // option 1 "Shop Inventory"
-        printf("PRODUCT NAME: %s \nPRODUCT PRICE: €%.2f\n", p.name, p.price); // original source code
+        printf("PRODUCT NAME: %s \nPRODUCT PRICE: EUR%.2f\n", p.name, p.price); // original source code
     else // option 2 "Read Orders"
         printf("PRODUCT NAME: %s \n",p.name); // display name only
     printf("-------------\n"); // original source code
@@ -74,7 +74,7 @@ struct Shop printCustomerUpdateShopState(struct Customer c, struct Shop s)
     int countOuterCustomer=0,countInnerShop=countOuterCustomer; // then full order
 
     // printf("CUSTOMER NAME: %s \nCUSTOMER BUDGET: %.2f\n", c.name, c.budget); // original source code 
-    printf("\n\n\nCUSTOMER NAME: %s \nCUSTOMER BUDGET: €%.2f\n", c.name, c.budget);  // display purposes only
+    printf("\n\n\nCUSTOMER NAME: %s \nCUSTOMER BUDGET: EUR%.2f\n", c.name, c.budget);  // display purposes only
     printf("-------------\n"); // original source code
 
     for(int i = 0; i < c.index; i++) // original source code
@@ -94,7 +94,7 @@ struct Shop printCustomerUpdateShopState(struct Customer c, struct Shop s)
 
             if (strcmp(c.shoppingList[i].product.name,s.stock[j].product.name)==0) // shop stocks product
             {
-                printf("The cost to %s will be €%.2f\n", c.name, cost); // original source code
+                printf("The cost to %s will be EUR%.2f\n", c.name, cost); // original source code
                 uiShopMenuDisplay('-',13); putchar('\n'); // display purposes only
             }
             else
@@ -109,14 +109,14 @@ struct Shop printCustomerUpdateShopState(struct Customer c, struct Shop s)
                 {
                     printf("(Invalid Shop Quantity: Out of Stock)   >>> %s\n",
                         c.shoppingList[i].product.name); // thrown appropriate error
-                    printf("The cost to %s will be €0.00\n", c.name); // thrown appropriate error
+                    printf("The cost to %s will be EUR0.00\n", c.name); // thrown appropriate error
                 }
                 else
                 {
                     printf("(Invalid Shop Quantity: Quantity Limit) >>> %d\n",
                         s.stock[j].quantity); // thrown appropriate error
                     shoppingCartInvoice+=s.stock[j].quantity*s.stock[j].product.price; // product partial cost 
-                    printf("The cost to %s will be €%.2f\n",
+                    printf("The cost to %s will be EUR%.2f\n",
                         c.name,s.stock[j].quantity*s.stock[j].product.price); // thrown appropriate error                  
                 }
                 uiShopMenuDisplay('-',13); putchar('\n'); // display purposes only
@@ -129,10 +129,10 @@ struct Shop printCustomerUpdateShopState(struct Customer c, struct Shop s)
                 
                 if (canOnlyAfford>=(int)c.budget) // complete partial order
                 {
-                    printf("Unfortunately %s has a budget of €%0.2f\n",c.name,c.budget); // display purposes only
+                    printf("Unfortunately %s has a budget of EUR%0.2f\n",c.name,c.budget); // display purposes only
                     shoppingCartInvoice+=canOnlyAfford*s.stock[j].product.price; // update cart affordability 
                     c.budget-=canOnlyAfford*s.stock[j].product.price; // reduce budget accordingly
-                    printf("%s can only afford %d %s at a cost of €%0.2f\n",
+                    printf("%s can only afford %d %s at a cost of EUR%0.2f\n",
                         c.name,canOnlyAfford,s.stock[j].
                         product.name,canOnlyAfford*s.stock[j].product.price); // display purposes only
                     c.shoppingList[i].quantity=canOnlyAfford; // quanitity shop state
@@ -165,7 +165,7 @@ struct Shop printCustomerUpdateShopState(struct Customer c, struct Shop s)
         {
             printf("(Invalid Shop Product: <NOT IN STOCK>)  >>> %s\n",
                 c.shoppingList[i].product.name); // thrown appropriate error
-            printf("The cost to %s will be €0.00\n", c.name); // thrown appropriate error
+            printf("The cost to %s will be EUR0.00\n", c.name); // thrown appropriate error
             uiShopMenuDisplay('-',13); putchar('\n'); // display purposes only
         }
 
@@ -176,10 +176,10 @@ struct Shop printCustomerUpdateShopState(struct Customer c, struct Shop s)
     if (shoppingCartInvoice>0) 
     {
         if (canFillFullOrder==1 && countInnerShop==countOuterCustomer)
-            printf("(Completed <FULL> Order: Now Due)       >>> €%0.2f\n",
+            printf("(Completed <FULL> Order: Now Due)       >>> EUR%0.2f\n",
                 shoppingCartInvoice); // display full order
         else
-            printf("(Completed <PARTIAL> Order: Now Due)    >>> €%0.2f\n",
+            printf("(Completed <PARTIAL> Order: Now Due)    >>> EUR%0.2f\n",
                 shoppingCartInvoice); // display partial order
     }
     else
@@ -334,12 +334,12 @@ struct Customer createCustomerLiveMode()
     name[0]=toupper(name[0]); // first letter uppercase
     for (int i=1;name[i];i++) name[i]=tolower(name[i]); // convert to lowercase        
 
-    printf("(Valid Input: Customer Budget)          >>> €"); // display purposes only
+    printf("(Valid Input: Customer Budget)          >>> EUR"); // display purposes only
     scanf("%s",b); // scan customer budget
     double budget=atof(b); // make it double
     while (budget==0) // zero not number
     {
-        printf("(Valid Input: Customer Budget)          >>> €"); // display purposes only
+        printf("(Valid Input: Customer Budget)          >>> EUR"); // display purposes only
         scanf("%s",b); // rescan customer budget
         budget=atof(b); // make it double
     }
