@@ -12,11 +12,12 @@ void shopMenuDisplayFooter();
 void shopMenuLiveDisplayHeader();
 void shopMenuLiveDisplay();
 
-#define SHOPPINGLIST 10 // symbolic name constant
+// symbolic name constants
+#define MAX_CHARACTERS 49 // display purposes only
+#define SHOPPINGLIST 10
 #define MIN 20
 #define MED 35
 #define MAX 50
-#define MAX_CHARACTERS 49 // display purposes only
 
 struct Product {
     char* name;
@@ -46,7 +47,7 @@ struct Customer {
 /* 
  * 
  * Amend function printProduct to only display the product name via:
- * i. function shopMenuDisplay (signature: "void shopMenuDisplay()") selecting option 2 "Read Orders". 
+ * i. option 2 "Read Orders".
  *
  */
 void printProduct(struct Product p) // original source code
@@ -63,7 +64,7 @@ void printProduct(struct Product p) // original source code
  * Amend function printCustomer (signature: "void printCustomer(struct Customer c)") having:
  *   i. the same functionality as before;
  *  ii. updating shop state and;
- * iii. return shop state to main. 
+ * iii. return shop state to function main. 
  *
  */
 struct Shop printCustomerUpdateShopState(struct Customer c, struct Shop s)
@@ -77,8 +78,11 @@ struct Shop printCustomerUpdateShopState(struct Customer c, struct Shop s)
     printf("\n\n\nCUSTOMER NAME: %s \nCUSTOMER BUDGET: EUR%.2f\n", c.name, c.budget);  // display purposes only
     printf("-------------\n"); // original source code
 
+    /*
+     * for each customers
+     */
     for(int i = 0; i < c.index; i++) // original source code
-    { // for each customer
+    {
         int countShopIterations=0; // cart shop iterations
         countNoProductMatch=0; // reset next customer
 
@@ -86,8 +90,11 @@ struct Shop printCustomerUpdateShopState(struct Customer c, struct Shop s)
         printf("%s ORDERS %d OF ABOVE PRODUCT\n", c.name, c.shoppingList[i].quantity); // original source code
         uiShopMenuDisplay('-',13); putchar('\n'); // display purposes only     
 
+        /*
+         * iterate all stock
+         */
         for (int j=0;j<s.index;j++) // update stop state
-        { // iterate all stock
+        {
             // double cost = c.shoppingList[i].quantity * c.shoppingList[i].product.price; // original source code
             double cost=c.shoppingList[i].quantity*s.stock[j].product.price; // product full cost
             countShopIterations++; // latter compare countNoProductMatch 
@@ -104,7 +111,6 @@ struct Shop printCustomerUpdateShopState(struct Customer c, struct Shop s)
                 continue; // continue sanity checking
             else if (c.shoppingList[i].quantity>s.stock[j].quantity) // exceed shop quantity
             {
-
                 if (s.stock[j].quantity<=0) // product all gone
                 {
                     printf("(Invalid Shop Quantity: Out of Stock)   >>> %s\n",
@@ -121,7 +127,6 @@ struct Shop printCustomerUpdateShopState(struct Customer c, struct Shop s)
                 }
                 uiShopMenuDisplay('-',13); putchar('\n'); // display purposes only
                 canFillFullOrder=0; // partial order false
-
             }
             else if (c.budget<cost) // budget not allowing
             {
@@ -146,7 +151,7 @@ struct Shop printCustomerUpdateShopState(struct Customer c, struct Shop s)
                 uiShopMenuDisplay('-',13); putchar('\n'); // display purposes only
                 canFillFullOrder=0; // now partial order
             }
-            else if (c.budget>=cost) // all going weel
+            else if (c.budget>=cost) // all going well
             {
                 shoppingCartInvoice+=cost; // add to cart
                 c.budget-=shoppingCartInvoice; // reduce down budget    
@@ -159,8 +164,11 @@ struct Shop printCustomerUpdateShopState(struct Customer c, struct Shop s)
             
             countInnerShop++; // full partial order
 
-        } // onto next customer
-        
+        } 
+
+        /*
+         * onto next customer
+         */        
         if (countShopIterations==countNoProductMatch) // iteration no match
         {
             printf("(Invalid Shop Product: <NOT IN STOCK>)  >>> %s\n",
@@ -171,8 +179,11 @@ struct Shop printCustomerUpdateShopState(struct Customer c, struct Shop s)
 
         countOuterCustomer++; // full partial order
 
-    } // all customers done
+    } 
 
+    /*
+     * all customers done
+     */
     if (shoppingCartInvoice>0) 
     {
         if (canFillFullOrder==1 && countInnerShop==countOuterCustomer)
@@ -183,7 +194,7 @@ struct Shop printCustomerUpdateShopState(struct Customer c, struct Shop s)
                 shoppingCartInvoice); // display partial order
     }
     else
-        printf("(Invalid Order: <NIL> Shopping Cart)    >>> %0.2f\n",shoppingCartInvoice); // thrown appropriate error
+        printf("(Invalid Order: <NIL> Shopping Cart)    >>> EUR%0.2f\n",shoppingCartInvoice); // thrown appropriate error
 
     s.cash+=shoppingCartInvoice; // cash shop state
 
@@ -192,7 +203,8 @@ struct Shop printCustomerUpdateShopState(struct Customer c, struct Shop s)
 
 /* 
  * 
- * Amend function printShop having no original functionality changed.
+ * Function printShop having no original functionality changed:
+ * i. minor amendments for display purposes only.
  *
  */
 void printShop(struct Shop s) // original source code
@@ -212,10 +224,10 @@ void printShop(struct Shop s) // original source code
  * Amend function createAndStockShop (otherwise unchanged) having:
  *   i. error message displayed (before exit) if the file (stock.csv) cannot be located (or name is changed).
  * Additional:
- *   i. memory allocation for product name returning pointer of type char via type cast (pointer of type char) and;
- *  ii. using a symbolic name (MAX) of size 50 (times type char) to allocate memory on the fly.
+ *  ii. memory allocation for product name returning pointer of type char via type cast (pointer of type char) and;
+ * iii. using a symbolic name (MAX) of size 50 (times type char) to allocate memory on the fly.
  * Additional:
- *   i. closing file (stock.csv) after reading (returning the stop state to main - now in memory).
+ *  iv. closing file (stock.csv) after reading (returning the shop state to main - now in memory).
  * 
  */
 struct Shop createAndStockShop()
@@ -228,7 +240,7 @@ struct Shop createAndStockShop()
     fp = fopen("../stock.csv", "r");
     if (fp == NULL)
     {
-        shopMenuDisplayHeader("ERROR - stock.csv!"); putchar('\n'); // display purposes only
+        shopMenuDisplayHeader("ERROR - stock.csv!"); // display purposes only
         exit(EXIT_FAILURE);
     }
 
@@ -264,7 +276,7 @@ struct Shop createAndStockShop()
 
 /* 
  * 
- * Create function readCustomerCSVFile using most of the original functionality in function createAndStockShop.
+ * Function readCustomerCSVFile using most of the original functionality in function createAndStockShop.
  *
  */
 struct Customer readCustomerCSVFile()
@@ -319,7 +331,7 @@ struct Customer readCustomerCSVFile()
 
 /* 
  * 
- * Create function createCustomerLiveMode via shop menu option 3 "Live Mode" and return live customer.
+ * Function createCustomerLiveMode via shop menu option 3 "Live Mode" and return live customer.
  *
  */
 struct Customer createCustomerLiveMode()
@@ -330,16 +342,17 @@ struct Customer createCustomerLiveMode()
     shopMenuLiveDisplayHeader(); // display purposes only
 
     printf("(Valid Input: Customer Name)            >>> "); // display purposes only
+
     scanf("%s",name); // scan customer name
     name[0]=toupper(name[0]); // first letter uppercase
     for (int i=1;name[i];i++) name[i]=tolower(name[i]); // convert to lowercase        
 
     printf("(Valid Input: Customer Budget)          >>> EUR"); // display purposes only
     scanf("%s",b); // scan customer budget
-    double budget=atof(b); // make it double
-    while (budget==0) // zero not number
+    double budget=atof(b); // make it double 
+    while (budget<=0) // error check budget
     {
-        printf("(Valid Input: Customer Budget)          >>> EUR"); // display purposes only
+        //printf("(Valid Input: Customer Budget)          >>> EUR"); // display purposes only
         scanf("%s",b); // rescan customer budget
         budget=atof(b); // make it double
     }
@@ -351,8 +364,8 @@ struct Customer createCustomerLiveMode()
 
 /* 
  * 
- * Create function createLiveModeCheckout passing live customer via function createCustomerLiveMode and return cart.
- *
+ * Function createLiveModeCheckout passing live customer via function createCustomerLiveMode and return cart.
+ * 
  */
 struct Customer createLiveModeCheckout(struct Customer cart)
 {
@@ -384,20 +397,19 @@ struct Customer createLiveModeCheckout(struct Customer cart)
             switch(customerCartChoice) // user input dependent
             {
                 case exit: // alternative case 0
-                    return cart;
+                    return cart; // send back cart
                     break;
                 case addProductToCart: // alternative case 1
-                    shopMenuLiveDisplayHeader(); // display purposes only
-                    
-                    char cb; // to clear buffer
                     printf("(Valid Input: Product Name - Case-sensitive!)\n"); // display purposes only
                     printf("(Correct Uppercase/Lowercase Letters)   >>> "); // display purposes only
-                    scanf("%c",&cb); // buffer cleared now
-                    scanf("%[^\n]",pname);
+                    char clearBuffer; // to clear buffer
+                    scanf("%c",&clearBuffer); // buffer cleared now
+                    scanf("%[^\n]",pname); // scan except newline
                     product.name=pname; // declare struct product
+                    product.price=0; // not displaying price
 
                     printf("(Valid Input: Product Quantity)         >>> "); // display purposes only
-                    while (scanf("%d",&quantity)!=1) // zero not number
+                    while (scanf("%d",&quantity)!=1 || quantity<=0) // error sanity check
                     {
                         printf("(Valid Input: Product Quantity)         >>> "); // display purposes only
                         while((getchar())!='\n'); // clear input buffer [3][4]
@@ -408,9 +420,7 @@ struct Customer createLiveModeCheckout(struct Customer cart)
                     cart.shoppingList[cart.index++]=customerItem; // full shopping cart
                     break;
                 default:
-                    shopMenuDisplayHeader("Invalid Choice!!!!"); // display purposes only
-                    shopMenuLiveDisplayHeader(); // display purposes only
-                    break;                      
+                    break;                   
             }
         }
 
@@ -418,12 +428,17 @@ struct Customer createLiveModeCheckout(struct Customer cart)
     return cart; // live customer basket
 }
 
+/* 
+ * 
+ * Implementation ground zero.
+ * 
+ */
 int main(void)
 {
     enum 
     {
         user=-2, // initial user state
-        exit=0, // true then exit
+        exit=0, // false then exit
         shopInventory=1, // shop option 1
         readOrders=2, // shop option 2
         liveMode=3 // shop option 3
@@ -433,18 +448,15 @@ int main(void)
 
     system("clear"); // clear screen output [2]
     shopMenuDisplay(); // display purposes only
-
+    
     while (user!=exit) // -2 != 0
-    {
-        /* ******************
-         * EOF stalls program
-         * ******************/
+    {      
         if (scanf("%d",&shopMenuChoice)!=1) // not a number
         {
             while((getchar())!='\n'); // clear input buffer [3][4]
             shopMenuDisplayHeader("Invalid Choice!!!!"); putchar('\n'); // display purposes only
             shopMenuDisplay(); // display purposes only
-        }  
+        }
         else // user choice good
         {
             switch(shopMenuChoice) // user input dependent
@@ -469,11 +481,12 @@ int main(void)
                     printShop(shop); // display shop inventory
                     struct Customer liveCustomer=createCustomerLiveMode(); // create live customer
                     struct Customer liveCustomerCart=createLiveModeCheckout(liveCustomer); // create shopping basket
+                    system("clear"); // clear screen output [2]
                     shop=printCustomerUpdateShopState(liveCustomerCart,shop); // update shop state
                     shopMenuDisplayFooter(); // display purposes only
-                    break;
-                default:
-                    shopMenuDisplayHeader("Invalid Choice!!!!"); // display purposes only
+                    break;                                  
+                default: // outside range [0,3]
+                    shopMenuDisplayHeader("Invalid Choice!!!!"); putchar('\n'); // display purposes only
                     shopMenuDisplay(); // display purposes only
                     break;
             }
@@ -498,9 +511,9 @@ int main(void)
  *
  */
 
-void uiShopMenuDisplay(char c,int s)
+void uiShopMenuDisplay(char c, int n)
 {
-    for (int i=0;i<s;i++)
+    for (int i=0;i<n;i++)
         putchar(c);
 } // display purposes only
 
@@ -518,7 +531,7 @@ void shopMenuDisplay()
 
 void shopMenuDisplayHeader(char s[])
 {
-    system("clear"); // clear screen output []
+    system("clear"); // clear screen output [2]
     uiShopMenuDisplay('\n',3); // display range [1,3]
     uiShopMenuDisplay('\t',2); puts(s); // display line 4
     uiShopMenuDisplay(' ',16); uiShopMenuDisplay('-',18); // display line 5
@@ -530,7 +543,7 @@ void shopMenuDisplayFooter()
     uiShopMenuDisplay('\n',3); // display range [1,3]
     uiShopMenuDisplay(' ',16); uiShopMenuDisplay('-',18); // display line 4
     uiShopMenuDisplay('\n',4); // display range [5,7]                    
-    shopMenuDisplay();
+    shopMenuDisplay(); // display shop men
 } // display purposes only
 
 void shopMenuLiveDisplayHeader()
